@@ -1,0 +1,38 @@
+删除：MATCH (n:POCC) DETACH DELETE n
+
+导入节点：
+LOAD CSV WITH HEADERS  FROM "file:///POCC.csv" AS line  
+CREATE (p:POCC{name:line.name,Detail:line.Detail,Attribute1Key:line.Attribute1Key,Attribute1Value:line.Attribute1Value,Attribute2Key:line.Attribute2Key,Attribute2Value:line.Attribute2Value}) 
+
+LOAD CSV WITH HEADERS  FROM "file:///DS.csv" AS line  
+CREATE (p:DS{name:line.name,Detail:line.Detail,Attribute1Key:line.Attribute1Key,Attribute1Value:line.Attribute1Value,Attribute2Key:line.Attribute2Key,Attribute2Value:line.Attribute2Value}) 
+
+LOAD CSV WITH HEADERS  FROM "file:///OS.csv" AS line  
+CREATE (p:OS{name:line.name,Detail:line.Detail,Attribute1Key:line.Attribute1Key,Attribute1Value:line.Attribute1Value,Attribute2Key:line.Attribute2Key,Attribute2Value:line.Attribute2Value}) 
+
+LOAD CSV WITH HEADERS  FROM "file:///Network_Entity.csv" AS line  
+CREATE (p:CN{name:line.name,Detail:line.Detail,Attribute1Key:line.Attribute1Key,Attribute1Value:line.Attribute1Value,Attribute2Key:line.Attribute2Key,Attribute2Value:line.Attribute2Value}) 
+
+'''CREATE CONSTRAINT ON (c:POCC)
+ASSERT c.name IS UNIQUE'''
+
+导入关系：
+LOAD CSV WITH HEADERS FROM "file:///POCC-R.csv" AS line  
+MATCH (a:POCC{name:line.Entity1}),(b:POCC{name:line.Entity2})  
+call apoc.merge.relationship(a, line.Relation, {}, {}, b) yield rel
+return *;
+
+LOAD CSV WITH HEADERS FROM "file:///DS-R.csv" AS line  
+MATCH (a:DS{name:line.Entity1}),(b:DS{name:line.Entity2})  
+call apoc.merge.relationship(a, line.Relation, {}, {}, b) yield rel
+return *;
+
+LOAD CSV WITH HEADERS FROM "file:///OS-R.csv" AS line  
+MATCH (a:OS{name:line.Entity1}),(b:OS{name:line.Entity2})  
+call apoc.merge.relationship(a, line.Relation, {}, {}, b) yield rel
+return *;
+
+LOAD CSV WITH HEADERS FROM "file:///Network_Relation.csv" AS line  
+MATCH (a:CN{name:line.Entity1}),(b:CN{name:line.Entity2})  
+call apoc.merge.relationship(a, line.Relation, {}, {}, b) yield rel
+return *;
