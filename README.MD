@@ -1,4 +1,4 @@
-## KG-POCC
+## KG
 
 ### Usage
 First:
